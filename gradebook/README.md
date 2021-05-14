@@ -1,5 +1,5 @@
 # Gradebook
-This demo program is a console program, which iterates through an array of doubles, sums them together and prints them.<br/>
+This demo program is a console program, which takes values to a list and counts the average of those numbers.<br/>
 In addition, the program greets the person who is running the program.
 
 ---
