@@ -3,13 +3,19 @@ using Xunit;
 
 namespace GradeBook.Tests
 {
+
+    public delegate string WriteLogDelegate(string logMessage);
+
     public class TypeTests
     {
+
+        int count = 0;
+
         [Fact]
         public void GetBookReturnsTwoDifferentBooks()
         {
-            Book book1 = getBook("Book 1");
-            Book book2 = getBook("Book 2");
+            InMemoryBook book1 = getBook("Book 1");
+            InMemoryBook book2 = getBook("Book 2");
             
             Assert.Equal("Book 1", book1.Name);
             Assert.Equal("Book 2", book2.Name);
@@ -19,8 +25,8 @@ namespace GradeBook.Tests
         [Fact]
         public void TwoVarsCanReferenceSameObject()
         {
-            Book book1 = getBook("Book 1");
-            Book book2 = book1;
+            InMemoryBook book1 = getBook("Book 1");
+            InMemoryBook book2 = book1;
 
             Assert.Same(book1, book2);
         }
@@ -28,7 +34,7 @@ namespace GradeBook.Tests
         [Fact]
         public void CanSetNameFromReference()
         {
-            Book book1 = getBook("Book 1");
+            InMemoryBook book1 = getBook("Book 1");
             setName(book1, "New Name");
 
             Assert.Equal("New Name", book1.Name);
@@ -37,7 +43,7 @@ namespace GradeBook.Tests
         [Fact]
         public void CSharpIsPassByValue()
         {
-            Book book1 = new Book("Book 1");
+            InMemoryBook book1 = new InMemoryBook("Book 1");
             getBookSetName(book1, "New Name");
 
             Assert.Equal("Book 1", book1.Name);
@@ -46,7 +52,7 @@ namespace GradeBook.Tests
         [Fact]
         public void CSharpCanPassByValue()
         {
-            Book book1 = new Book("Book 1");
+            InMemoryBook book1 = new InMemoryBook("Book 1");
             getBookSetName(ref book1, "New Name");
             
             Assert.Equal("New Name", book1.Name);
@@ -61,6 +67,43 @@ namespace GradeBook.Tests
             Assert.Equal(42, x);
         }
 
+        [Fact]
+        public void StringsBehaveLikeValueTypes()
+        {
+            string name = "matti";
+            string upper = MakeUpperCase(name);
+
+            Assert.Equal("matti", name);
+            Assert.Equal("MATTI", upper);
+        }
+
+        [Fact]
+        public void WriteLogDelegateCanPointToMethod()
+        {
+            WriteLogDelegate log = ReturnMessage;
+            log += ReturnMessage;
+            log += IncrementCount;
+            string result = log("Hello!");
+            Assert.Equal(3, count);
+        }
+
+        private string IncrementCount(string message)
+        {
+            count++;
+            return message.ToLower();
+        }
+
+        private string ReturnMessage(string message)
+        {
+            count++;
+            return message;
+        }
+
+        private string MakeUpperCase(string name)
+        {
+            return name.ToUpper();
+        }
+
         private void setInt(ref int x)
         {
             x = 42;
@@ -71,25 +114,25 @@ namespace GradeBook.Tests
             return 3;
         }
 
-        private void getBookSetName(ref Book book, string name)
+        private void getBookSetName(ref InMemoryBook book, string name)
         {
-            book = new Book(name);
+            book = new InMemoryBook(name);
         }
 
-        private void getBookSetName(Book book, string name)
+        private void getBookSetName(InMemoryBook book, string name)
         {
-            book = new Book(name);
+            book = new InMemoryBook(name);
             book.Name = name;
         }
 
-        private void setName(Book book, string name)
+        private void setName(InMemoryBook book, string name)
         {
             book.Name = name;
         }
 
-        private Book getBook(string name)
+        private InMemoryBook getBook(string name)
         {
-            return new Book(name);
+            return new InMemoryBook(name);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace GradeBook.Tests
         [Fact]
         public void BookCalculatesAnAverageGrade()
         {
-            Book book = new Book("");
+            InMemoryBook book = new InMemoryBook("");
             book.AddGrade(89.1);
             book.AddGrade(90.5);
             book.AddGrade(77.3);
@@ -21,6 +21,7 @@ namespace GradeBook.Tests
             Assert.Equal(expectedAverage, result.Average, 1);
             Assert.Equal(expectedHigh, result.High, 1);
             Assert.Equal(expectedLow, result.Low, 1);
+            Assert.Equal('B', result.Letter);
         }
     }
 }
