@@ -1,3 +1,7 @@
+# Folders
 .vscode/
 bin/
 obj/
+
+# Files
+gradebook/src/GradeBook/*.txt
